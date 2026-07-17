@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';" />
+<title>Silence Remover</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="deck">
+
+    <header class="deck__header">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path d="M3 12h3l2-7 4 14 3-9 2 5h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div>
+          <h1>Silence Remover</h1>
+          <p class="brand__sub">Cuts dead air. Runs locally. Nothing leaves this machine.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="deck__body">
+
+      <!-- Drop zone -->
+      <section id="dropZone" class="dropzone" tabindex="0">
+        <div class="dropzone__inner">
+          <svg viewBox="0 0 24 24" width="28" height="28" class="dropzone__icon">
+            <path d="M12 16V4M12 4l-4 4M12 4l4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p id="dropLabel">Drop a video file here, or click to choose one</p>
+          <p class="dropzone__hint">MP4, MOV, MKV, AVI, WEBM</p>
+        </div>
+      </section>
+
+      <!-- Controls -->
+      <section class="controls" id="controls" hidden>
+
+        <div class="control">
+          <div class="control__label">
+            <label for="silenceDb">Silence threshold</label>
+            <span class="control__value" id="silenceDbValue">−40 dB</span>
+          </div>
+          <input type="range" id="silenceDb" min="-60" max="-20" step="1" value="-40" />
+          <p class="control__hint">Lower (more negative) picks up only near-total silence. Raise it to also catch quiet room tone.</p>
+        </div>
+
+        <div class="control">
+          <div class="control__label">
+            <label for="minDuration">Minimum gap length</label>
+            <span class="control__value" id="minDurationValue">0.5 s</span>
+          </div>
+          <input type="range" id="minDuration" min="0.1" max="3" step="0.1" value="0.5" />
+          <p class="control__hint">Gaps shorter than this are left alone, so natural pauses in speech survive.</p>
+        </div>
+
+        <div class="control">
+          <div class="control__label">
+            <label for="padding">Padding around cuts</label>
+            <span class="control__value" id="paddingValue">0.15 s</span>
+          </div>
+          <input type="range" id="padding" min="0" max="0.5" step="0.05" value="0.15" />
+          <p class="control__hint">Keeps a sliver of silence at each cut so edits don't feel jarring.</p>
+        </div>
+
+        <button id="runButton" class="run-button">Remove silence</button>
+      </section>
+
+      <!-- Waveform / progress -->
+      <section class="waveform" id="waveformSection" hidden>
+        <div class="waveform__track">
+          <div class="waveform__fill" id="waveformFill"></div>
+        </div>
+        <div class="waveform__status">
+          <span id="statusMessage">Working…</span>
+          <span id="statusPercent">0%</span>
+        </div>
+      </section>
+
+      <!-- Result -->
+      <section class="result" id="resultSection" hidden>
+        <div class="result__stat">
+          <span class="result__num" id="resultRemoved">0.0s</span>
+          <span class="result__label">of dead air removed</span>
+        </div>
+        <div class="result__path" id="resultPath"></div>
+        <button id="resetButton" class="ghost-button">Process another file</button>
+      </section>
+
+      <p class="error" id="errorMessage" hidden></p>
+
+    </main>
+
+    <footer class="deck__footer">
+      <p>Everything above runs through a local ffmpeg process on your machine — no upload, no account, no internet required.</p>
+    </footer>
+
+  </div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
